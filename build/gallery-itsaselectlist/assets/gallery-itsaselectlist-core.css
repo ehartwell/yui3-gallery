@@ -1,3 +1,4 @@
+/*csslint adjoining-classes: false, star-property-hack: false */
 .yui3-js-enabled .yui3-itsaselectlist-loading {
     display: none;
 }
@@ -111,6 +112,13 @@
     background-color: #B3D4FF;
 }
 
+.itsa-selectlist-basediv ul li:before,
+.itsa-selectlist-basediv ul li:after {
+    content: '';
+    padding: 0;
+    margin: 0;
+}
+
 .itsa-selectlist-basediv li {
     white-space:nowrap;
     list-style: none;
@@ -137,7 +145,10 @@
 }
 
 .itsa-selectlist-selected {
+<<<<<<< HEAD
     background-image: url('itsa-icons-2012-08-15.gif');
+=======
+>>>>>>> upstream/master
     background-repeat: no-repeat;
 }
 
@@ -150,12 +161,19 @@
     display: -moz-inline-stack;
     display: inline-block;
     *display: inline;
+<<<<<<< HEAD
 
+=======
+    *zoom: 1;
+>>>>>>> upstream/master
     height: 20px;
     vertical-align: middle;
     width: 20px;
     background-repeat: no-repeat;
+<<<<<<< HEAD
     background-image: url('itsa-buttonicons-2013-01-07.png');
+=======
+>>>>>>> upstream/master
 }
 
 .itsa-icon-selectdown {

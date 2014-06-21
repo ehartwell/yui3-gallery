@@ -28,7 +28,7 @@ var Lang = Y.Lang,
     ITSA_SHIM_TEMPLATE = '<iframe frameborder="0" tabindex="-1" class="itsa-shim" title="' + ITSA_SHIM_TEMPLATE_TITLE +
                                            '" src="javascript:false;"></iframe>',
     ITSA_SELECTEDMAIN_TEMPLATE = "<span class='itsa-selectlist-selectedmain' unselectable='on'></span>",
-    ITSA_BUTTON_TEMPLATE = "<button class='yui3-button'></button>",
+    ITSA_BUTTON_TEMPLATE = "<button type='button' class='yui3-button'></button>",
     ITSA_DOWNBUTTON_TEMPLATE = "<span class='itsa-button-icon itsa-icon-selectdown'></span>",
     ITSA_SELECTBOX_TEMPLATE = "<div class='itsa-selectlist-basediv " + ITSA_CLASSHIDDEN + "'><div class='itsa-selectlist-scrolldiv'>"+
                                                      "<ul class='itsa-selectlist-ullist'></ul></div></div>";
@@ -74,13 +74,6 @@ Y.ITSASelectList = Y.Base.create('itsaselectlist', Y.Widget, [], {
  */
 
 /**
- * Reference to the toolbar-node
- * @private
- * @property _syncWithinSetterItems
- * @type Y.Node
- */
-
-/**
  * arraylist of all created eventhandlers within bindUI(). Is used to cleanup during destruction.
  * @private
  * @property _eventhandlers
@@ -92,7 +85,6 @@ Y.ITSASelectList = Y.Base.create('itsaselectlist', Y.Widget, [], {
         _selectedItemClass : null,
         _itemsContainerNode : null,
         _itemValues : null, // for internal use: listitems, transformed to String, so we can use selectItemByValue
-        _syncWithinSetterItems : false, // no items.setter.syncUI during initializing
         _eventhandlers : [],
 
 
@@ -143,6 +135,9 @@ Y.ITSASelectList = Y.Base.create('itsaselectlist', Y.Widget, [], {
             if (btnSize===1) {boundingBox.addClass('itsa-buttonsize-small');}
             else {if (btnSize===2) {boundingBox.addClass('itsa-buttonsize-medium');}}
             boundingBox.append(instance._itemsContainerNode);
+            instance._itemsChange({newVal: instance.get('items'), fromInit: true});
+            // forcing to set the value into defaultItem
+            instance.get('value');
         },
 
         /**
@@ -166,6 +161,12 @@ Y.ITSASelectList = Y.Base.create('itsaselectlist', Y.Widget, [], {
             instance._eventhandlers.push(
                instance.on('disabledChange', instance._disabledChange, instance)
             );
+            instance._eventhandlers.push(
+                instance.after('itemsChange', function(e) {
+                    instance._itemsChange(e);
+                    instance.syncUI();
+                })
+            );
         },
 
         /**
@@ -181,9 +182,11 @@ Y.ITSASelectList = Y.Base.create('itsaselectlist', Y.Widget, [], {
                 ullist = instance._itemsContainerNode.one('.itsa-selectlist-ullist'),
                 i,
                 item,
+                startindex = instance.get('index'),
                 itemText,
                 isDefaultItem,
                 defaultItemFound,
+                nodeclass,
                 newNode;
             ullist.setHTML(''); // clear content
             if (items.length>0) {
@@ -191,15 +194,27 @@ Y.ITSASelectList = Y.Base.create('itsaselectlist', Y.Widget, [], {
                     item = items[i];
                     itemText = Lang.isString(item) ? item : (item.text || '');
                     isDefaultItem = (itemText===defaultItem);
+<<<<<<< HEAD
                     if (isDefaultItem) {defaultItemFound = true;}
                     newNode = Y.Node.create('<li' + (isDefaultItem ? ' class="' + instance._selectedItemClass + '"' : '') + '>' + itemText +'</li>');
+=======
+                    if (isDefaultItem || (startindex===i)) {
+                        defaultItemFound = true;
+                        if (startindex===i) {
+                            defaultItem = itemText;
+                        }
+                        instance.set('index', i, {silent: true});
+                    }
+                    nodeclass = item.className || '';
+                    newNode = Y.Node.create('<li' + ((isDefaultItem || (startindex===i)) ? ' class="'+instance._selectedItemClass+' '+nodeclass+'"' :
+                                            ((nodeclass!=='') ? ' class="'+nodeclass+'"' : ''))+'>' + itemText +'</li>');
+>>>>>>> upstream/master
                     if (item.returnValue) {newNode.setData('returnValue', item.returnValue);}
                     ullist.append(newNode);
                 }
                 instance._selectedMainItemNode.setHTML(
                     (instance.get('selectionOnButton') && defaultItemFound) ? defaultItem : instance.get('defaultButtonText'));
             }
-            instance._syncWithinSetterItems = true;
         },
 
         /**
@@ -235,12 +250,13 @@ Y.ITSASelectList = Y.Base.create('itsaselectlist', Y.Widget, [], {
          * <i>- e.index: index of the selected item</i>
          *
         */
-        selectItem : function(index, softMatch, softButtonText) {
+        selectItem : function(index, softMatch, softButtonText, fromSetter) {
             Y.log('selectItem ', 'cmas', 'ITSASelectList');
             var instance = this,
+                nodelist;
+            if (!instance.get('disabled') && (typeof index==='number')) {
                 nodelist = instance._itemsContainerNode.all('li');
-            if (!instance.get('disabled')) {
-                if ((index>=0) && (index<nodelist.size())) {instance._selectItem(nodelist.item(index));}
+                if ((index>=0) && (index<nodelist.size())) {instance._selectItem(nodelist.item(index), null, fromSetter);}
                 else {
                     // no hit: return to default without selection in case of softMatch
                     if (softMatch) {
@@ -273,7 +289,11 @@ Y.ITSASelectList = Y.Base.create('itsaselectlist', Y.Widget, [], {
             // by returnvalue
             Y.log('selectItemByValue', 'cmas', 'ITSASelectList');
             var instance = this,
-                index = Y.Array.indexOf(instance._itemValues, itemText.toString().toLowerCase());
+                index;
+/*jshint expr:true */
+            Lang.isValue(itemText) || (itemText='');
+/*jshint expr:false */
+            index = Y.Array.indexOf(instance._itemValues, itemText.toString().toLowerCase());
             instance.selectItem(index, softMatch, defaultButtonText ? instance.get('defaultButtonText') : itemText);
         },
 
@@ -293,12 +313,16 @@ Y.ITSASelectList = Y.Base.create('itsaselectlist', Y.Widget, [], {
          * <i>- e.index: index of the selected item</i>
          *
         */
-        _selectItem : function(node, userInteraction) {
+        _selectItem : function(node, userInteraction, fromSetter) {
             Y.log('_selectItem ', 'cmas', 'ITSASelectList');
             var instance = this,
                 previousNode = instance._itemsContainerNode.one('li.'+instance._selectedItemClass),
                 selectionOnButton = instance.get('selectionOnButton'),
+<<<<<<< HEAD
                 nodeHTML;
+=======
+                nodeHTML, index;
+>>>>>>> upstream/master
             if (!instance.get('disabled') && node && ((node !== previousNode) || !selectionOnButton)) {
                 if (previousNode) {
                     previousNode.removeClass(instance._selectedItemClass);
@@ -308,6 +332,13 @@ Y.ITSASelectList = Y.Base.create('itsaselectlist', Y.Widget, [], {
                     node.addClass(instance._selectedItemClass);
                     instance._selectedMainItemNode.setHTML(nodeHTML);
                 }
+<<<<<<< HEAD
+=======
+                index = instance._indexOf(node);
+/*jshint expr:true */
+                fromSetter || !selectionOnButton || instance.set('index', index, {silent: true});
+/*jshint expr:false */
+>>>>>>> upstream/master
                 /**
                  * In case of a valuechange, valueChange will be fired.
                  * No matter whether the change is done by userinteraction, or by a functioncall like selectItem()
@@ -407,7 +438,7 @@ Y.ITSASelectList = Y.Base.create('itsaselectlist', Y.Widget, [], {
         */
         currentIndex : function() {
             Y.log('currentIndex', 'cmas', 'ITSASelectList');
-            return this._indexOf(this.currentSelected());
+            return this.get('index');
         },
 
         /**
@@ -456,6 +487,38 @@ Y.ITSASelectList = Y.Base.create('itsaselectlist', Y.Widget, [], {
                     item.detach();
                 }
             );
+        },
+
+
+        /**
+         * Needs to be run after 'items' is changed, to setup internal _itemValues
+         *
+         * @method _itemsChange
+         * @private
+         *
+        */
+        _itemsChange : function(e) {
+            var instance = this,
+                fromInit = e.fromInit,
+                currentSelected = !fromInit && instance.get('value'),
+                val = e.newVal,
+                newindex = null,
+                item, i, trueItemValue;
+            instance._itemValues = [];
+            instance._trueItemValues = [];
+            for (i=0; i<val.length; i++) {
+                item = val[i];
+                // Make sure to fill the array with Strings. User might supply other types like numbers:
+                // you don't want to miss the hit when you search the array by value.
+                instance._itemValues.push(Lang.isValue(item.returnValue) ? item.returnValue.toString().toLowerCase() : item.toString().toLowerCase());
+                // also fill the true values, because the attribute 'value' should keep its type
+                trueItemValue = Lang.isValue(item.returnValue) ? item.returnValue : item;
+                instance._trueItemValues.push(trueItemValue);
+/*jshint expr:true */
+                !fromInit && (trueItemValue===currentSelected) && (newindex=i);
+/*jshint expr:false */
+            }
+            instance.set('index', newindex, {silent: true});
         },
 
         /**
@@ -573,6 +636,7 @@ Y.ITSASelectList = Y.Base.create('itsaselectlist', Y.Widget, [], {
                 value: [],
                 validator: function(val) {
                     return Y.Lang.isArray(val);
+<<<<<<< HEAD
                 },
                 setter: function(val) {
                     var instance = this,
@@ -588,6 +652,8 @@ Y.ITSASelectList = Y.Base.create('itsaselectlist', Y.Widget, [], {
                     // only call syncUI when items are change after rendering
                     if (this._syncWithinSetterItems) {this.syncUI();}
                     return val;
+=======
+>>>>>>> upstream/master
                 }
             },
 
@@ -601,6 +667,47 @@ Y.ITSASelectList = Y.Base.create('itsaselectlist', Y.Widget, [], {
                 value: null,
                 validator: function(val) {
                     return Y.Lang.isString(val);
+                }
+            },
+
+            /**
+             * @description The index of the selected item<br>
+             * Default = null
+             * @attribute index
+             * @type Int
+            */
+            index : {
+                value: null,
+                validator: function(val) {
+                    return (val===null) || (typeof val === 'number');
+                },
+                setter: function(val) {
+                    this.selectItem(val, null, null, true);
+                    return val;
+                }
+            },
+
+            /**
+             * @description The value represented by the selected index<br>
+             * Default = null
+             * @attribute value
+             * @type Any
+            */
+            value : {
+                value: null,
+                getter: function(val) {
+                    var instance = this,
+                        current = instance.currentIndex();
+                    if ((typeof current!=='number') && (val!==null)) {
+                        current = Y.Array.indexOf(instance._itemValues, val.toString().toLowerCase());
+/*jshint expr:true */
+                        (current>=0) && instance.set('index', current, {silent: true});
+/*jshint expr:false */
+                    }
+                    return (typeof current==='number') ? instance._trueItemValues[current] : null;
+                },
+                setter: function(val) {
+                    return this.selectItemByValue(val);
                 }
             },
 
@@ -663,6 +770,7 @@ Y.ITSASelectList = Y.Base.create('itsaselectlist', Y.Widget, [], {
                         allItems.push(
                             {
                                 text: node.getHTML(),
+                                className: node.getAttribute('class'),
                                 returnValue: node.getAttribute('value') || node.getHTML()
                             }
                         );
@@ -675,7 +783,11 @@ Y.ITSASelectList = Y.Base.create('itsaselectlist', Y.Widget, [], {
     }
 );
 
+<<<<<<< HEAD
 }, 'gallery-2013.06.13-01-19', {
+=======
+}, 'gallery-2014.01.10-22-44', {
+>>>>>>> upstream/master
     "requires": [
         "yui-base",
         "base-build",

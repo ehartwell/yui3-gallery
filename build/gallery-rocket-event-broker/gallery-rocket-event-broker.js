@@ -86,4 +86,8 @@ EventBroker.prototype = {
 Y.REventBroker = EventBroker;
 
 
+<<<<<<< HEAD
 }, 'gallery-2013.08.22-21-03', {"requires": ["event", "event-key"]});
+=======
+}, 'gallery-2013.09.18-18-49', {"requires": ["event", "event-key"]});
+>>>>>>> upstream/master

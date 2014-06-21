@@ -93,6 +93,14 @@ Y.extend(PLDTModule, Y.Plugin.Base,
 				}
 			},
 			this);
+<<<<<<< HEAD
+=======
+
+			table.on('dataChange', function()
+			{
+				layout.elementResized(table.get('contentBox'));
+			});
+>>>>>>> upstream/master
 		});
 	},
 
@@ -115,4 +123,8 @@ Y.namespace("Plugin");
 Y.Plugin.PageLayoutDataTableModule = PLDTModule;
 
 
+<<<<<<< HEAD
 }, 'gallery-2013.05.29-23-38', {"requires": ["gallery-layout", "datatable-scroll", "plugin"]});
+=======
+}, '@VERSION@', {"requires": ["gallery-layout", "datatable-scroll", "plugin"]});
+>>>>>>> upstream/master

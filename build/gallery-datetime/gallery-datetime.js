@@ -883,7 +883,11 @@ Y.extend(DateTime, Y.Base,
 Y.DateTime = DateTime;
 
 
+<<<<<<< HEAD
 }, 'gallery-2013.06.26-23-09', {
+=======
+}, 'gallery-2014.02.13-03-13', {
+>>>>>>> upstream/master
     "skinnable": "true",
     "requires": [
         "base",

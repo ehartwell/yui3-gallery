@@ -65,7 +65,8 @@ var cell_class        = Y.ClassNameManager.getClassName(HTMLTableBulkEditor.NAME
 	textarea_class       = Y.ClassNameManager.getClassName(HTMLTableBulkEditor.NAME, 'textarea'),
 	select_class         = Y.ClassNameManager.getClassName(HTMLTableBulkEditor.NAME, 'select'),
 	checkbox_class       = Y.ClassNameManager.getClassName(HTMLTableBulkEditor.NAME, 'checkbox'),
-	cb_multiselect_class = Y.ClassNameManager.getClassName(HTMLTableBulkEditor.NAME, 'checkbox-multiselect');
+	cb_multiselect_class = Y.ClassNameManager.getClassName(HTMLTableBulkEditor.NAME, 'checkbox-multiselect'),
+	cb_multi_input_class = Y.ClassNameManager.getClassName(HTMLTableBulkEditor.NAME, 'input-multiselect');
 
 /**
  * Renders an input element in the cell.
@@ -133,7 +134,20 @@ HTMLTableBulkEditor.checkboxMultiselectFormatter = function(o)
 };
 
 /**
- * Map of field type to cell formatter.
+ * Renders a multi-value input for multiselect in the cell.
+ *
+ * @method autocompleteInputMultiselectFormatter
+ * @static
+ * @param o {Object} cell, key, value, field, column, record
+ */
+HTMLTableBulkEditor.autocompleteInputMultiselectFormatter = function(o)
+{
+	o.cell.set('innerHTML', BulkEditor.markup.autocompleteInputMultiselect.call(this, o));
+	o.cell.addClass(cb_multi_input_class);
+};
+
+/**
+ * Map of field type to cell `formatter` and container `css`.
  *
  * @property Y.HTMLTableBulkEditor.defaults
  * @type {Object}
@@ -143,27 +157,38 @@ HTMLTableBulkEditor.defaults =
 {
 	input:
 	{
-		formatter: HTMLTableBulkEditor.inputFormatter
+		formatter: HTMLTableBulkEditor.inputFormatter,
+		css:       input_class
 	},
 
 	select:
 	{
-		formatter: HTMLTableBulkEditor.selectFormatter
+		formatter: HTMLTableBulkEditor.selectFormatter,
+		css:       select_class
 	},
 
 	checkbox:
 	{
-		formatter: HTMLTableBulkEditor.checkboxFormatter
+		formatter: HTMLTableBulkEditor.checkboxFormatter,
+		css:       checkbox_class
 	},
 
 	checkboxMultiselect:
 	{
-		formatter: HTMLTableBulkEditor.checkboxMultiselectFormatter
+		formatter: HTMLTableBulkEditor.checkboxMultiselectFormatter,
+		css:       cb_multiselect_class
+	},
+
+	autocompleteInputMultiselect:
+	{
+		formatter: HTMLTableBulkEditor.autocompleteInputMultiselectFormatter,
+		css:       cb_multi_input_class
 	},
 
 	textarea:
 	{
-		formatter: HTMLTableBulkEditor.textareaFormatter
+		formatter: HTMLTableBulkEditor.textareaFormatter,
+		css:       textarea_class
 	}
 };
 
@@ -193,15 +218,14 @@ function moveFocus(e)
 		var field = this.getFieldElement(id, info.field_key);
 		if (field)
 		{
+			field.focus();
 			try
 			{
-				field.focus();
 				field.select();
 			}
 			catch (ex)
 			{
-				// no way to determine in IE if focus will fail
-				// no way to determine if browser allows focus to select elements
+				// select elements don't support select()
 			}
 		}
 	}
@@ -220,7 +244,7 @@ Y.extend(HTMLTableBulkEditor, BulkEditor,
 		var table_class = Y.ClassNameManager.getClassName(HTMLTableBulkEditor.NAME);
 
 		if (!this.table ||
-			container.get('firstChild').get('tagName').toLowerCase() != 'table' ||
+			container.get('firstChild').get('tagName') != 'TABLE' ||
 			!container.get('firstChild').hasClass(table_class))
 		{
 			var s = Y.Lang.sub('<table class="{t}"><thead class="{hd}"><tr>',

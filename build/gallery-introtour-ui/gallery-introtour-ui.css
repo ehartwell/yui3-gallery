@@ -169,6 +169,13 @@ a.yui3-button {
 	float:right;
 	cursor:pointer;
 	color:#CCC;
+<<<<<<< HEAD
+=======
+	text-decoration:none;
+}
+.yui-galleryintrotourui-card-closebutton:visited{
+	color:#CCC;
+>>>>>>> upstream/master
 }
 .yui-galleryintrotourui-card-closebutton:hover{
 	color:#444;
@@ -296,7 +303,11 @@ a.yui3-button {
 }
 
 .yui3-button-icon {
+<<<<<<< HEAD
     background-image: url("../assets/button/icon-sprite-dark-and-light-24.png");
+=======
+    background-image: url("http://yui.yahooapis.com/gallery-2013.10.14-07-00/assets/button/icon-sprite-dark-and-light-24.png");
+>>>>>>> upstream/master
     background-repeat: no-repeat;
     display: inline-block;
     height: 20px;

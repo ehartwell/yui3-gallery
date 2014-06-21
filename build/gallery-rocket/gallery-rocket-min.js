@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 YUI.add("gallery-rocket",function(e,t){"use strict";var n=e.ClassNameManager.getClassName;e.App.CLASS_NAMES={app:n("rocket"),views:n("rocket","views")},e.Rocket=e.App},"gallery-2013.08.22-21-03",{requires:["app","gallery-rocket-controller","gallery-rocket-view","gallery-rocket-layout","gallery-rocket-list-view","gallery-rocket-child-view-container","gallery-rocket-region","gallery-rocket-region-manager","gallery-rocket-event-broker","gallery-rocket-util"]});
+=======
+YUI.add("gallery-rocket",function(e,t){"use strict";var n=e.ClassNameManager.getClassName;e.App.CLASS_NAMES={app:n("rocket"),views:n("rocket","views")},e.Rocket=e.App},"gallery-2013.09.18-18-49",{requires:["app","gallery-rocket-controller","gallery-rocket-model","gallery-rocket-view","gallery-rocket-layout","gallery-rocket-list-view","gallery-rocket-child-view-container","gallery-rocket-region","gallery-rocket-region-manager","gallery-rocket-event-broker","gallery-rocket-util"]});
+>>>>>>> upstream/master

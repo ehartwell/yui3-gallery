@@ -73,4 +73,8 @@ ChildViewContainer.prototype = {
 Y.RChildViewContainer = ChildViewContainer;
 
 
+<<<<<<< HEAD
 }, 'gallery-2013.08.22-21-03', {"requires": ["yui-base"]});
+=======
+}, 'gallery-2013.09.18-18-49', {"requires": ["yui-base"]});
+>>>>>>> upstream/master

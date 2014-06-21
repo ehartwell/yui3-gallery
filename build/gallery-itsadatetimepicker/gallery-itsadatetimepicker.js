@@ -1053,7 +1053,11 @@ if (!Y.Global.ItsaDateTimePicker) {
 
 Y.ItsaDateTimePicker = Y.Global.ItsaDateTimePicker;
 
+<<<<<<< HEAD
 }, 'gallery-2013.06.26-23-09', {
+=======
+}, 'gallery-2013.10.02-20-26', {
+>>>>>>> upstream/master
     "requires": [
         "base",
         "node-base",

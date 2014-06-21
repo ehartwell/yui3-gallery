@@ -53,8 +53,10 @@ Y.extend(PLDTModule, Y.Plugin.Base,
 				layout = this.get('layout'),
 
 				module_bd =
-				table.get('boundingBox')
-					 .ancestor('.' + Y.PageLayout.module_body_class);
+					table.get('boundingBox')
+						 .ancestor('.' + Y.PageLayout.module_body_class),
+
+				scroll_top = 0;
 
 			module_bd.generateID();
 
@@ -62,20 +64,53 @@ Y.extend(PLDTModule, Y.Plugin.Base,
 			{
 				if (e.bd.get('id') == module_bd.get('id') && e.height == 'auto')
 				{
+					if (table._yScrollNode)
+					{
+						scroll_top = table._yScrollNode.get('scrollTop');
+					}
+
 					table.set('height', 'auto');
 					table.set('scrollable', 'x');
 				}
-			});
+			},
+			this);
 
 			layout.on('afterResizeModule', function(e)
 			{
 				if (e.bd.get('id') == module_bd.get('id'))
 				{
+					table.set('width', (e.width - Y.DOM.getScrollbarWidth())+'px');
 					table.set('height', e.height+'px');
 					table.set('scrollable', true);
+
+					if (table._yScrollNode && !this.ignore_scroll_top)
+					{
+						table._yScrollNode.set('scrollTop', scroll_top);
+					}
+					this.ignore_scroll_top = false;
 				}
+			},
+			this);
+
+			table.on('dataChange', function()
+			{
+				layout.elementResized(table.get('contentBox'));
 			});
 		});
+	},
+
+	/**
+	 * By default, the scroll position is restored after Y.PageLayout
+	 * reflows the page.  In certain cases, e.g., switching to a different
+	 * page of data, the scroll position should be reset instead.  Call
+	 * this function to request that the scroll position be reset after the
+	 * next layout reflow.
+	 * 
+	 * @method resetScroll
+	 */
+	resetScroll: function()
+	{
+		this.ignore_scroll_top = true;
 	}
 });
 

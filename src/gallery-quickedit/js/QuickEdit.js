@@ -423,7 +423,12 @@ function validateElements(
 	var count  = list.size();
 	for (var i=0; i<count; i++)
 	{
-		var e  = list.item(i);
+		var e = list.item(i);
+		if (!Y.DOM.hasClass(e, 'quickedit-field'))
+		{
+			continue;
+		}
+
 		var qe = this.column_map[ this._getColumnKey(e) ].quickEdit;
 		if (!qe)
 		{
@@ -528,6 +533,7 @@ Y.extend(QuickEdit, Y.Plugin.Base,
 					{
 						formatter:     col.formatter,
 						nodeFormatter: col.nodeFormatter,
+						_formatterFn:  col._formatterFn,
 						allowHTML:     col.allowHTML
 					};
 
@@ -572,6 +578,7 @@ Y.extend(QuickEdit, Y.Plugin.Base,
 			var col           = this.column_map[key];
 			col.formatter     = fmt.formatter;
 			col.nodeFormatter = fmt.nodeFormatter;
+			col._formatterFn  = fmt._formatterFn;
 			col.allowHTML     = fmt.allowHTML;
 		},
 		this);
@@ -628,13 +635,11 @@ Y.extend(QuickEdit, Y.Plugin.Base,
 			var change  = {},
 				changed = false;
 
-			var field_count = list.size();
-			for (var j=0; j<field_count; j++)
+			list.each(function(field)
 			{
-				var field = list.item(j);
-				var key   = this._getColumnKey(field);
-				var qe    = this.column_map[key].quickEdit;
-				var prev  = rec.get(key);
+				var key  = this._getColumnKey(field);
+				var qe   = this.column_map[key].quickEdit;
+				var prev = rec.get(key);
 
 				var val = Y.Lang.trim(field.get('value'));
 				if (qe.changed ? qe.changed(prev, val) :
@@ -643,7 +648,8 @@ Y.extend(QuickEdit, Y.Plugin.Base,
 					change[key] = val;
 					changed     = true;
 				}
-			}
+			},
+			this);
 
 			if (changed || include_all)
 			{

@@ -2435,7 +2435,7 @@ BulkEditor.markup =
 		var checkbox =
 			'<div class="{cont}{key}">' +
 				'<input type="checkbox" id="{id}" {value} class="{field}{key}" /> ' +
-				'<label for="{id}">{label}</label>' +
+				'{label}' +
 				'{msg}' +
 			'</div>';
 
@@ -2540,7 +2540,11 @@ function multiselectMarkup(type, o)
 					list.push(v.text);
 					return list;
 				})
+<<<<<<< HEAD
 			})
+=======
+			});
+>>>>>>> upstream/master
 
 			node.plug(Y.Plugin.MultivalueInput,
 			{
@@ -2577,10 +2581,17 @@ function multiselectMarkup(type, o)
 				'<label for="{id}-{value}">{label}</label>' +
 			'</p>';
 
+<<<<<<< HEAD
 		var column_start = '<div class="checkbox-multiselect-column">',
 			column_end   = '</div>';
 
 		var input_markup = Y.Array.reduce(o.field.values, '<div class="checkbox-multiselect-column first">', function(s, v, i)
+=======
+		var column_start = '<td class="checkbox-multiselect-column">',
+			column_end   = '</td>';
+
+		var input_markup = Y.Array.reduce(o.field.values, '', function(s, v, i)
+>>>>>>> upstream/master
 		{
 			var m = Y.Lang.sub(checkbox,
 			{
@@ -2598,7 +2609,14 @@ function multiselectMarkup(type, o)
 			return s + m;
 		});
 
+<<<<<<< HEAD
 		input_markup += column_end;
+=======
+		input_markup =
+			'<table class="checkbox-multiselect-container"><tr>' +
+			column_start + input_markup + column_end +
+			'</tr></table>';
+>>>>>>> upstream/master
 	}
 
 	var option = '<option value="{value}" {selected}>{text}</option>';
@@ -2795,7 +2813,11 @@ HTMLTableBulkEditor.autocompleteInputMultiselectFormatter = function(o)
 };
 
 /**
+<<<<<<< HEAD
  * Map of field type to cell formatter.
+=======
+ * Map of field type to cell `formatter` and container `css`.
+>>>>>>> upstream/master
  *
  * @property Y.HTMLTableBulkEditor.defaults
  * @type {Object}
@@ -2805,22 +2827,32 @@ HTMLTableBulkEditor.defaults =
 {
 	input:
 	{
-		formatter: HTMLTableBulkEditor.inputFormatter
+		formatter: HTMLTableBulkEditor.inputFormatter,
+		css:       input_class
 	},
 
 	select:
 	{
-		formatter: HTMLTableBulkEditor.selectFormatter
+		formatter: HTMLTableBulkEditor.selectFormatter,
+		css:       select_class
 	},
 
 	checkbox:
 	{
-		formatter: HTMLTableBulkEditor.checkboxFormatter
+		formatter: HTMLTableBulkEditor.checkboxFormatter,
+		css:       checkbox_class
 	},
 
 	checkboxMultiselect:
 	{
-		formatter: HTMLTableBulkEditor.checkboxMultiselectFormatter
+		formatter: HTMLTableBulkEditor.checkboxMultiselectFormatter,
+		css:       cb_multiselect_class
+	},
+
+	autocompleteInputMultiselect:
+	{
+		formatter: HTMLTableBulkEditor.autocompleteInputMultiselectFormatter,
+		css:       cb_multi_input_class
 	},
 
 	autocompleteInputMultiselect:
@@ -2830,7 +2862,8 @@ HTMLTableBulkEditor.defaults =
 
 	textarea:
 	{
-		formatter: HTMLTableBulkEditor.textareaFormatter
+		formatter: HTMLTableBulkEditor.textareaFormatter,
+		css:       textarea_class
 	}
 };
 
@@ -2860,15 +2893,14 @@ function moveFocus(e)
 		var field = this.getFieldElement(id, info.field_key);
 		if (field)
 		{
+			field.focus();
 			try
 			{
-				field.focus();
 				field.select();
 			}
 			catch (ex)
 			{
-				// no way to determine in IE if focus will fail
-				// no way to determine if browser allows focus to select elements
+				// select elements don't support select()
 			}
 		}
 	}
@@ -3025,7 +3057,11 @@ Y.extend(HTMLTableBulkEditor, BulkEditor,
 Y.HTMLTableBulkEditor = HTMLTableBulkEditor;
 
 
+<<<<<<< HEAD
 }, 'gallery-2013.08.15-00-45', {
+=======
+}, 'gallery-2014.06.04-21-38', {
+>>>>>>> upstream/master
     "skinnable": "true",
     "requires": [
         "widget",

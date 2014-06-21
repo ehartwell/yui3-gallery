@@ -102,4 +102,8 @@ var Layout = Y.Base.create('rocketLayout', Y.RView, [Y.REventBroker], {
 Y.RLayout = Layout;
 
 
+<<<<<<< HEAD
 }, 'gallery-2013.08.22-21-03', {"requires": ["gallery-rocket-view", "gallery-rocket-region-manager"]});
+=======
+}, 'gallery-2013.09.18-18-49', {"requires": ["gallery-rocket-view", "gallery-rocket-region-manager"]});
+>>>>>>> upstream/master

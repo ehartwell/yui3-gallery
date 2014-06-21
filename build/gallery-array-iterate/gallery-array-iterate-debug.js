@@ -47,4 +47,8 @@ Iterate through an array.
     Y.Array.iterate = _iterate;
 }(Y));
 
+<<<<<<< HEAD
 }, 'gallery-2013.05.02-22-59', {"requires": "yui-base"});
+=======
+}, 'gallery-2013.11.14-01-08');
+>>>>>>> upstream/master

@@ -381,9 +381,16 @@ if (Y.config.doc.selection && !Y.config.win.getSelection) {
     RangyInputs = Y.augment(RangyInputs, RangyInputsIE, true);
 }
 
+<<<<<<< HEAD
 
 Y.namespace('RangyInputs');
 Y.RangyInputs = RangyInputs;
 
 
 }, 'gallery-2013.08.22-21-03', {"requires": ["yui-base"]});
+=======
+Y.namespace('Plugin').RangyInputs = RangyInputs;
+
+
+}, 'gallery-2013.09.04-21-56', {"use": ["node-base", "node-pluginhost"], "requires": ["yui-base"]});
+>>>>>>> upstream/master

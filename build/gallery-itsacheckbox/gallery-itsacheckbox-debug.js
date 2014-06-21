@@ -20,10 +20,19 @@ YUI.add('gallery-itsacheckbox', function (Y, NAME) {
 
 var LANG = Y.Lang,
     YARRAY = Y.Array,
+<<<<<<< HEAD
     WIDGET_CLASS = 'yui3-itsacheckbox',
     READONLY = 'readonly',
     READONLY_CLASS = WIDGET_CLASS + '-' + READONLY,
     PARENT_CLASS = WIDGET_CLASS + '-parent',
+=======
+    Node = Y.Node,
+    YUI3_ = 'yui3-',
+    WIDGET_CLASS = YUI3_+'itsacheckbox',
+    READONLY = 'readonly',
+    READONLY_CLASS = WIDGET_CLASS + '-' + READONLY,
+    PARENT_CLASS = 'itsa-widget-parent',
+>>>>>>> upstream/master
     LOADING_CLASS = WIDGET_CLASS + '-loading',
     RERENDER_CLASS = WIDGET_CLASS + '-rerender',
     HIDDEN_CLASS = WIDGET_CLASS + '-hidden',
@@ -36,6 +45,10 @@ var LANG = Y.Lang,
     OPTION_OFF = OPTION + 'off',
     ISIE = (Y.UA.ie>0),
     BOUNDINGBOX = 'boundingBox',
+<<<<<<< HEAD
+=======
+    BOOLEAN = 'boolean',
+>>>>>>> upstream/master
     STRING = 'string',
     WIDTH = 'width',
     HEIGHT = 'height',
@@ -48,6 +61,10 @@ var LANG = Y.Lang,
     PADDINGRIGHT = 'paddingRight',
     MARGINLEFT = 'marginLeft',
     VALUECHANGE_EVT = 'valuechange',
+<<<<<<< HEAD
+=======
+    FOCUSSED = 'focussed',
+>>>>>>> upstream/master
     PX = 'px',
     LEFT = 'left',
     DISABLED = 'disabled',
@@ -56,6 +73,18 @@ var LANG = Y.Lang,
     UNSELECTABLE = 'unselectable',
     DIVCLASS = '<div class="',
     ENDDIV = '</div>',
+<<<<<<< HEAD
+=======
+    STRINGTRUE = 'true',
+    ONENTER = 'onenter',
+    SUBMITONENTER = 'submit'+ONENTER,
+    PRIMARYBTNONENTER = 'primarybtn'+ONENTER,
+    DATA_ = 'data-',
+    DATA_SUBMITONENTER = DATA_+SUBMITONENTER,
+    DATA_PRIMARYBTNONENTER = DATA_+PRIMARYBTNONENTER,
+    DATA_FOCUSNEXTONENTER = DATA_+'focusnext'+ONENTER,
+    BOUNDINGBOX_TEMPLATE_NEWVERSION = DIVCLASS+YUI3_+'widget '+WIDGET_CLASS+' '+WIDGET_CLASS+'-content">'+ENDDIV,
+>>>>>>> upstream/master
     HTML_CHECKBOX_TEMPLATE = '<input id="{id}" type="checkbox" class="'+CREATED_CHECKBOX+'"{'+READONLY+'}{'+CHECKED+'}{'+DISABLED+'}>',
     TEMPLATE = '{htmlcheckbox}'+
                DIVCLASS+OPTION_WRAPPER+'">'+
@@ -145,6 +174,32 @@ Y.ITSACheckbox = Y.Base.create('itsacheckbox', Y.Widget, [], {
          * @private
          */
 
+<<<<<<< HEAD
+=======
+
+
+        /**
+         * Reference to the parentnode of srcNode (input-element). Is used to check if a label-element is wrapping the html-checkbox
+         * @property _srcParentNode
+         * @type Y.Node
+         * @private
+         */
+
+        /**
+         * Flag to indicate if the original html-checkbox comes in front of the text: ONLY applyable when is wrapped by a label-element
+         * @property _checkBoxBeforeText
+         * @type Boolean
+         * @private
+         */
+
+        /**
+         * Backup-ref to the label-element - if applyable
+         * @property _bkpLabel
+         * @type Y.Node
+         * @private
+         */
+
+>>>>>>> upstream/master
         /**
          * @method initializer
          * @protected
@@ -172,12 +227,56 @@ Y.ITSACheckbox = Y.Base.create('itsacheckbox', Y.Widget, [], {
             Y.log('renderUI ', 'cmas', 'ITSACheckBox');
             var instance = this,
                 boundingBox = instance.get(BOUNDINGBOX),
+<<<<<<< HEAD
                 src;
             src = instance.get('srcNode');
             if (src && (src.get('tagName')==='INPUT') && (src.getAttribute('type')==='checkbox')) {
                 instance._src = Y.one(src);
                 src.addClass(HIDDEN_CLASS);
                 boundingBox.insert(src, 'before');
+=======
+                src, bkpLabel, checkBoxInsideLabel, srcParentNode, checkBoxBeforeText;
+            src = instance._src = instance.get('srcNode');
+            if (src && (src.get('tagName')==='INPUT') && (src.getAttribute('type')==='checkbox')) {
+              src.addClass(HIDDEN_CLASS);
+                // Need to check if checkbox is inside a label-element --> due to HTML validation the widget CANNOT lie inside a label!
+                instance._srcParentNode = srcParentNode = src.get('parentNode') || Y.one('body');
+                checkBoxInsideLabel = (srcParentNode.get('tagName')==='LABEL');
+                // in yui before 3.13.0 the boundingBox was created as a DIV behind srcNode
+                // as from 3.13.0, boundingBox===srcNode
+                if (boundingBox.get('tagName')==='INPUT') {
+                    // as from 3.13.0
+                    // no insert, because srcNode already is in the DOM
+                    clonedNode = Node.create(BOUNDINGBOX_TEMPLATE_NEWVERSION);
+                    if (!checkBoxInsideLabel) {
+                        src.insert(clonedNode, 'after');
+                    }
+                    else {
+                        instance._checkBoxBeforeText = checkBoxBeforeText = (srcParentNode.getHTML().toLowerCase().substr(0, 6)==='<label');
+                        srcParentNode.insert(clonedNode, checkBoxBeforeText ? 'before' : 'after');
+                        // now: mode the checkbox outside its parent labelnode:
+                        srcParentNode.insert(src, 'after');
+                    }
+                    instance._set(BOUNDINGBOX, clonedNode); // redefine the boudingbox --> it has to be a node separate from srcNode
+                    // Next, correct the classes that were added to the input-tag during initialization
+                    src.removeClass(LOADING_CLASS);
+                    src.removeClass(YUI3_+'widget');
+                    src.removeClass(WIDGET_CLASS);
+                    src.removeClass(WIDGET_CLASS+'-content');
+                    if (instance.get(READONLY)) {
+                        src.removeClass(READONLY_CLASS);
+                    }
+                }
+                else {
+                    // before 3.13.0
+                    boundingBox.insert(src, 'before');
+                }
+                // now disable label-activity:
+               bkpLabel = instance._bkpLabel = Y.one('label[for="'+src.get('id')+'"]');
+/*jshint expr:true */
+               bkpLabel && bkpLabel.removeAttribute('for');
+/*jshint expr:false */
+>>>>>>> upstream/master
             }
             if (instance._parentNode) {
                 instance._parentNode.addClass(PARENT_CLASS);
@@ -195,6 +294,11 @@ Y.ITSACheckbox = Y.Base.create('itsacheckbox', Y.Widget, [], {
             Y.log('bindUI ', 'cmas', 'ITSACheckBox');
             var instance = this,
                 boundingBox = instance.get(BOUNDINGBOX),
+<<<<<<< HEAD
+=======
+                parentNode = instance._parentNode || boundingBox,
+                boundingBoxDOMNode = parentNode.getDOMNode(),
+>>>>>>> upstream/master
                 dd;
 
             instance.dd = dd = new Y.DD.Drag({
@@ -237,6 +341,10 @@ Y.ITSACheckbox = Y.Base.create('itsacheckbox', Y.Widget, [], {
                     */
                     instance.fire(VALUECHANGE_EVT, e);
                     if (instance._src) {
+<<<<<<< HEAD
+=======
+                        instance._src.set(CHECKED, checked);
+>>>>>>> upstream/master
                         if (checked) {
                             instance._src.setAttribute(CHECKED, CHECKED);
                         }
@@ -264,7 +372,11 @@ Y.ITSACheckbox = Y.Base.create('itsacheckbox', Y.Widget, [], {
                     instance._forceCheckedVal = false;
                     dd.set('lock', disabled || instance.get(READONLY));
                     instance._goFinal(checked, true);
+<<<<<<< HEAD
                     // now set up the right payload for the valueChange-event
+=======
+                    // now set up the right payload for the valuechange-event
+>>>>>>> upstream/master
                     if (disabled) {
                         payload.newVal = null;
                         payload.prevVal = checked;
@@ -294,7 +406,11 @@ Y.ITSACheckbox = Y.Base.create('itsacheckbox', Y.Widget, [], {
                     checked = instance.get(CHECKED);
                     instance._forceCheckedVal = false;
                     boundingBox.toggleClass(READONLY_CLASS, readonly);
+<<<<<<< HEAD
                     dd.set('lock', readonly|| instance.get(DISABLED));
+=======
+                    dd.set('lock', readonly || instance.get(DISABLED));
+>>>>>>> upstream/master
                     instance._goFinal(checked, true);
                     if (instance._src) {
                         if (readonly) {
@@ -309,14 +425,55 @@ Y.ITSACheckbox = Y.Base.create('itsacheckbox', Y.Widget, [], {
 
             instance._eventhandlers.push(
                 instance._containerNode.on('tap', function() {
+<<<<<<< HEAD
+=======
+                    instance.focus();
+>>>>>>> upstream/master
                     instance.toggle();
+                })
+            );
+
+<<<<<<< HEAD
+            // DO NOT use 'keypress' for Safari doesn't pass through the arrowkeys!
+            instance._eventhandlers.push(
+                Y.on('keydown', function(e) {
+                    if (instance.get('focused')) {
+=======
+            instance._eventhandlers.push(
+                parentNode.on(
+                    'blur',
+                    Y.bind(instance.blur, instance)
+                )
+            );
+
+            instance._eventhandlers.push(
+                Y.after(
+                    'rerenderCheckbox',
+                    Y.bind(instance.syncUI, instance)
+                )
+            );
+
+            instance._eventhandlers.push(
+                instance.on(SUBMITONENTER+CHANGE, function(e) {
+/*jshint expr:true */
+                    e.newVal ? parentNode.setAttribute(DATA_SUBMITONENTER, STRINGTRUE) : parentNode.removeAttribute(DATA_SUBMITONENTER);
+/*jshint expr:false */
+                })
+            );
+
+            instance._eventhandlers.push(
+                instance.on(PRIMARYBTNONENTER+CHANGE, function(e) {
+/*jshint expr:true */
+                    e.newVal ? parentNode.setAttribute(DATA_PRIMARYBTNONENTER, STRINGTRUE) : parentNode.removeAttribute(DATA_PRIMARYBTNONENTER);
+/*jshint expr:false */
                 })
             );
 
             // DO NOT use 'keypress' for Safari doesn't pass through the arrowkeys!
             instance._eventhandlers.push(
                 Y.on('keydown', function(e) {
-                    if (instance.get('focused')) {
+                    if (instance.get(FOCUSSED) || (boundingBoxDOMNode===Y.config.doc.activeElement)) {
+>>>>>>> upstream/master
                         var keyCode = e.keyCode;
                         e.preventDefault(); // prevent scrolling
                         if ((keyCode === 37) || (keyCode === 40)) {
@@ -386,6 +543,12 @@ Y.ITSACheckbox = Y.Base.create('itsacheckbox', Y.Widget, [], {
             var instance = this,
                 prevVal = instance.get(CHECKED),
                 newVal;
+<<<<<<< HEAD
+=======
+            if (instance.get(READONLY)) {
+                return;
+            }
+>>>>>>> upstream/master
             if (prevVal!==null) {
                 instance.set(CHECKED, !prevVal);
                 newVal = instance.get(CHECKED);
@@ -417,8 +580,16 @@ Y.ITSACheckbox = Y.Base.create('itsacheckbox', Y.Widget, [], {
             Y.log('destructor', 'info', 'ITSACheckBox');
             var instance = this,
                 dd = instance.dd,
+<<<<<<< HEAD
                 createdSrc = instance._createdSrc,
                 src = instance._src;
+=======
+                checkBoxBeforeText = instance._checkBoxBeforeText,
+                createdSrc = instance._createdSrc,
+                bkpLabel = instance._bkpLabel,
+                src = instance._src;
+            instance._destroyAllNodes = true; // making always destroy nodes,
+>>>>>>> upstream/master
             if (dd) {
                 dd.destroy();
             }
@@ -427,12 +598,32 @@ Y.ITSACheckbox = Y.Base.create('itsacheckbox', Y.Widget, [], {
                 createdSrc.destroy();
             }
             else {
+<<<<<<< HEAD
                 src.removeClass(HIDDEN_CLASS);
             }
             instance._wrapperNode.remove(true);
             if (instance._parentNode) {
                 instance._parentNode.removeClass(PARENT_CLASS);
             }
+=======
+/*jshint expr:true */
+                src && src.removeClass(HIDDEN_CLASS);
+/*jshint expr:false */
+            }
+            if (instance._parentNode) {
+                instance._parentNode.removeClass(PARENT_CLASS);
+            }
+            // now reset label-activity:
+/*jshint expr:true */
+            bkpLabel && bkpLabel.setAttribute('for', src.get('id'));
+/*jshint expr:false */
+            // now: replace the checkbox inside its parent labelnode
+            if (typeof checkBoxBeforeText==='boolean') {
+/*jshint expr:true */
+                checkBoxBeforeText ? instance._srcParentNode.prepend(src) : instance._srcParentNode.append(src);
+/*jshint expr:false */
+            }
+>>>>>>> upstream/master
         },
 
         //------------------------------------------------------------------------------
@@ -623,6 +814,10 @@ Y.ITSACheckbox = Y.Base.create('itsacheckbox', Y.Widget, [], {
             optionWidth = Math.max(widthOnNode, widthOffNode);
 
             // exactly define the widths to prevent rounderrors
+<<<<<<< HEAD
+=======
+
+>>>>>>> upstream/master
             previous = widthOnNode - PARSEINT(optionOnNode.getStyle(PADDINGLEFT)) - PARSEINT(optionOnNode.getStyle(PADDINGRIGHT));
             optionOnNode.setStyle(WIDTH, previous+(optionWidth-widthOnNode)+PX);
             previous = widthOffNode - PARSEINT(optionOffNode.getStyle(PADDINGLEFT)) - PARSEINT(optionOffNode.getStyle(PADDINGRIGHT));
@@ -708,6 +903,15 @@ Y.ITSACheckbox = Y.Base.create('itsacheckbox', Y.Widget, [], {
             instance._optionOnNode = optionOnNode = boundingBox.one('.'+OPTION_ON);
             instance._optionOffNode = optionOffNode = optionOnNode.next();
             instance._optionBtnNode = optionOffNode.next();
+<<<<<<< HEAD
+=======
+            parentNode = copyNode || boundingBox;
+            parentNode.setAttribute(DATA_FOCUSNEXTONENTER, STRINGTRUE);
+/*jshint expr:true */
+            instance.get(SUBMITONENTER) && parentNode.setAttribute(DATA_SUBMITONENTER, STRINGTRUE);
+            instance.get(PRIMARYBTNONENTER) && parentNode.setAttribute(DATA_PRIMARYBTNONENTER, STRINGTRUE);
+/*jshint expr:false */
+>>>>>>> upstream/master
         },
 
         /**
@@ -740,7 +944,11 @@ Y.ITSACheckbox = Y.Base.create('itsacheckbox', Y.Widget, [], {
                     if (instance.get('rendered')) {
                         blocked = instance.get(DISABLED) || instance.get(READONLY);
                     }
+<<<<<<< HEAD
                     return (typeof val === 'boolean') && !blocked;
+=======
+                    return (typeof val === BOOLEAN) && !blocked;
+>>>>>>> upstream/master
                 },
                 getter: function(val) {
                     var instance = this;
@@ -788,6 +996,24 @@ Y.ITSACheckbox = Y.Base.create('itsacheckbox', Y.Widget, [], {
             },
 
             /**
+<<<<<<< HEAD
+=======
+             * @description when part of ITSAViewModel, ITSAPanel or ITSAViewModelPanel, the primary-button
+             * will be 'click-simulated' when 'enter' is pressed while the checkbox has focus
+             *
+             * @default false
+             * @attribute primarybtnonenter
+             * @type String
+            */
+            primarybtnonenter : {
+                value: false,
+                validator: function(val) {
+                    return typeof val === BOOLEAN;
+                }
+            },
+
+            /**
+>>>>>>> upstream/master
              * @description When readonly, the widget has a valid value, but cannot be altered.
              * @attribute readonly
              * @default false
@@ -796,14 +1022,37 @@ Y.ITSACheckbox = Y.Base.create('itsacheckbox', Y.Widget, [], {
             readonly : {
                 value: false,
                 validator: function(val) {
+<<<<<<< HEAD
                     return typeof val === 'boolean';
+=======
+                    return typeof val === BOOLEAN;
+                }
+            },
+
+            /**
+             * @description when part of ITSAViewModel or ITSAViewModelPanel, the model will be submitted when 'enter'
+             * is pressed while the checkbox has focus
+             *
+             * @default false
+             * @attribute submitonenter
+             * @type String
+            */
+            submitonenter : {
+                value: false,
+                validator: function(val) {
+                    return typeof val === BOOLEAN;
+>>>>>>> upstream/master
                 }
             }
 
         },
         HTML_PARSER: {
             checked: function (srcNode) {
+<<<<<<< HEAD
                 var checked = (srcNode.getAttribute(CHECKED).toLowerCase()===CHECKED);
+=======
+                var checked =  srcNode.get(CHECKED);
+>>>>>>> upstream/master
                 return (this._srcNodeValidCheckbox(srcNode) && checked);
             },
             readonly: function (srcNode) {
@@ -811,16 +1060,27 @@ Y.ITSACheckbox = Y.Base.create('itsacheckbox', Y.Widget, [], {
                 return (this._srcNodeValidCheckbox(srcNode) && readonly);
             },
             disabled: function (srcNode) {
+<<<<<<< HEAD
                 var disabled = (srcNode.getAttribute(DISABLED).toLowerCase()===DISABLED);
+=======
+                var disabled =  srcNode.get(DISABLED);
+>>>>>>> upstream/master
                 return (this._srcNodeValidCheckbox(srcNode) && disabled);
             }
         }
     }
 );
 
+<<<<<<< HEAD
 }, 'gallery-2013.08.15-00-45', {
     "requires": [
         "yui-base",
+=======
+}, 'gallery-2014.02.20-23-55', {
+    "requires": [
+        "yui-base",
+        "dd-ddm",
+>>>>>>> upstream/master
         "node-base",
         "dom-screen",
         "widget",

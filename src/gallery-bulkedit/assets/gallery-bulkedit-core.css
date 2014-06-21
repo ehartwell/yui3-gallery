@@ -12,6 +12,13 @@
 	*display: block;
 }
 
+.yui3-htmltablebulkedit .checkbox-multiselect-column
+{
+	border: 0;
+	padding: 0;
+	vertical-align: top;
+}
+
 .yui3-htmltablebulkedit .checkbox-multiselect-checkbox
 {
 	margin: 0;

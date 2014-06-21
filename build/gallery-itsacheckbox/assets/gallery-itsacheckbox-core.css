@@ -1,10 +1,19 @@
+<<<<<<< HEAD
 .pure-form label {
     display: inline-block;
     *display: inline;
+=======
+/*csslint adjoining-classes: false, star-property-hack: false, important: false, outline-none: false, display-property-grouping: false */
+.pure-form label {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+>>>>>>> upstream/master
 }
 .pure-form-stacked label {
     display: block;
 }
+<<<<<<< HEAD
 
 
 
@@ -21,6 +30,21 @@
 .yui3-itsacheckbox-parent {
     display: inline-block;
     *display: inline;
+=======
+.yui3-itsacheckbox-hidden,
+.yui3-itsacheckbox-loading,
+.yui3-itsacheckbox-created-checkbox,
+.yui3-itsacheckbox-rerender {
+    position: absolute !important;
+    visibility: hidden !important;
+    left: -9999px !important;
+    top: -9999px !important;
+}
+.itsa-widget-parent {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+>>>>>>> upstream/master
     padding: 0;
 }
 .yui3-itsacheckbox .optionwrapper {
@@ -59,6 +83,7 @@
     position: static;
     text-align: center;
     white-space: nowrap;
+<<<<<<< HEAD
     box-shadow: inset 0 0.7em 0.2em rgba(0, 0, 0, 0.18);
     -webkit-box-shadow: inset 0 0.7em 0.2em rgba(0, 0, 0, 0.18);
     -moz-box-shadow: inset 0 0.7em 0.2em rgba(0, 0, 0, 0.18);
@@ -75,6 +100,24 @@
     -moz-box-shadow: inset 0 0.17em 0.5em rgba(0, 0, 0, 0.18);
     background-color: #fff;
     border: solid 1px #999;
+=======
+    -webkit-box-shadow: inset 0 0.7em 0.2em rgba(0, 0, 0, 0.18);
+    -moz-box-shadow: inset 0 0.7em 0.2em rgba(0, 0, 0, 0.18);
+    box-shadow: inset 0 0.7em 0.2em rgba(0, 0, 0, 0.18);
+}
+.yui3-itsacheckbox .optionon {
+    padding: 2px 0.7em 0 1.1em;
+}
+.yui3-itsacheckbox .optionoff {
+    padding: 2px 1.1em 0 0.7em;
+}
+.yui3-itsacheckbox .optionbtn {
+    -webkit-box-shadow: inset 0 0.17em 0.5em rgba(0, 0, 0, 0.18);
+    -moz-box-shadow: inset 0 0.17em 0.5em rgba(0, 0, 0, 0.18);
+    box-shadow: inset 0 0.17em 0.5em rgba(0, 0, 0, 0.18);
+    background-color: #fff;
+    border: solid 1px #AAA;
+>>>>>>> upstream/master
 }
 
 .pure-form-stacked .yui3-itsacheckbox,
@@ -90,8 +133,14 @@
     margin: 0.5em 0;
     display: inline-block;
     *display: inline;
+<<<<<<< HEAD
     vertical-align: middle;
     border: 1px solid #888;
+=======
+    *zoom: 1;
+    vertical-align: middle;
+    border: 1px solid #CCC;
+>>>>>>> upstream/master
     font-size: 0.8em;
     -webkit-transition: 0.3s linear border;
     -moz-transition: 0.3s linear border;
@@ -104,6 +153,15 @@
     -webkit-font-smoothing: antialiased;
 }
 
+<<<<<<< HEAD
+=======
+.yui3-itsacheckbox .optionwrapper div {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+>>>>>>> upstream/master
 .pure-form-stacked .yui3-itsacheckbox {
     margin: 0.25em 0;
 }
@@ -112,13 +170,21 @@
     *zoom: 1;
 }
 
+<<<<<<< HEAD
 .yui3-itsacheckbox.yui3-itsacheckbox-focused {
+=======
+.yui3-itsacheckbox:focus,
+.itsa-widget-parent[data-type="itsacheckbox"]:focus .yui3-itsacheckbox {
+>>>>>>> upstream/master
     outline: 0;
     border-color: #129FEA;
 }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> upstream/master
 .yui3-itsacheckbox.yui3-itsacheckbox-disabled .optionon,
 .yui3-itsacheckbox.yui3-itsacheckbox-disabled .optionoff,
 .yui3-itsacheckbox.yui3-itsacheckbox-focused.yui3-itsacheckbox-disabled .optionon,
@@ -128,21 +194,36 @@
 }
 
 .yui3-itsacheckbox.yui3-itsacheckbox-disabled,
+<<<<<<< HEAD
 .yui3-itsacheckbox.yui3-itsacheckbox-focused.yui3-itsacheckbox-disabled {
     border-color: #CCC;
     box-shadow: none;
 }
 
 .yui3-itsacheckbox.yui3-itsacheckbox-disabled .optionbtn,
+=======
+.yui3-itsacheckbox.yui3-itsacheckbox-readonly {
+    box-shadow: none;
+}
+
+.yui3-itsacheckbox.yui3-itsacheckbox-disabled:focus,
+.itsa-widget-parent[data-type="itsacheckbox"]:focus .yui3-itsacheckbox.yui3-itsacheckbox-disabled,
+.yui3-itsacheckbox.yui3-itsacheckbox-disabled:focus .optionbtn,
+.yui3-itsacheckbox.yui3-itsacheckbox-readonly:focus,
+.yui3-itsacheckbox.yui3-itsacheckbox-focused.yui3-itsacheckbox-readonly,
+>>>>>>> upstream/master
 .yui3-itsacheckbox.yui3-itsacheckbox-focused.yui3-itsacheckbox-disabled .optionbtn {
     border-color: #CCC;
 }
 
+<<<<<<< HEAD
 .yui3-itsacheckbox.yui3-itsacheckbox-focused.yui3-itsacheckbox-readonly {
     border-color: #888;
     box-shadow: none;
 }
 
+=======
+>>>>>>> upstream/master
 .yui3-itsacheckbox.yui3-itsacheckbox-disabled .optioncontainer,
 .yui3-itsacheckbox.yui3-itsacheckbox-readonly .optioncontainer {
     cursor: default;
